@@ -8,6 +8,12 @@ Este proyecto propone el desarrollo de un masajeador de drenaje linfático basad
 
 ## Descripción del Problema
 
+El sistema linfático es responsable de eliminar toxinas, regular los líquidos del cuerpo y apoyar el sistema inmunológico. Cuando su funcionamiento se ve afectado, puede producirse acumulación de líquidos, inflamación y dolor en diferentes partes del cuerpo.
+Algunas enfermedades como la Esclerosis múltiple, el Linfedema o la Fibromalgia afectan el flujo adecuado de la linfa, generando fatiga muscular, hinchazón, dolor e incomodidad. Por esta razón se utiliza el drenaje linfático manual, un tratamiento que ayuda a mejorar la circulación y reducir la inflamación, pero que generalmente requiere la intervención de un especialista.
+Por ello surge la necesidad de desarrollar un masajeador de drenaje linfático que permita estimular la circulación de manera accesible, ayudando a reducir la inflamación, aliviar la fatiga y mejorar el bienestar tanto en pacientes con estas enfermedades como en cualquier persona que experimente estrés muscular, mala circulación o retención de líquidos, ampliando así su impacto en la salud preventiva y el cuidado personal.
+
+
+
 ## Alcance del Proyecto
 El dispositivo propuesto se enfoca en terapias para tronco y extremidades (piernas y brazos) no siendo óptimo para terapias faciales. 
 
