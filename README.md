@@ -2,3 +2,4 @@
 
 ## Proyecto de sistemas embebidos 
 
+### objetivos
