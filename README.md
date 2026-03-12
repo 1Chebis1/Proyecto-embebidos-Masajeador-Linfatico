@@ -18,6 +18,14 @@ Se propone un índice IP50 por lo que el dispositivo no podrá ser sumergible ni
 
 ## Objetivos 
 
+### Objetivo general 
+Desarrollar un dispositivo electronico portatil para hacer masajes de drenaje linfático con diferentes estímulos fisicos que buscan simular un masaje hecho manualmente
+
+### Objetivos especificos 
+
+* Diseñar un dispositivo que sea facil de cargar y manipular para facilitar la realización de los masajes con poca o ninguna ayuda de otras personas
+* Integrar, mediante componentes fisicos y control electronico diferentes estimulos que se adapten a la situación requerida para optimizar el masaje
+* Desarrollar el dispositivo con materiales y funciones que sean seguras para la persona que esta recibiendo los masajes, para no afectar la piel o el sistema linfatico
 ## Repartición de Roles
 **Technical Lead:** Sebastián Escobar Restrepo
 **Firmware Engineer** Laura Gutiérrez Arias 
