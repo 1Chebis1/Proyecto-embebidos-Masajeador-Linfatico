@@ -2,6 +2,10 @@
 
 ## Introducción
 
+El sistema linfático cumple un papel fundamental en el organismo, ya que participa en la eliminación de toxinas, la regulación de los líquidos corporales y el funcionamiento del sistema inmunológico. Cuando este sistema se ve afectado, pueden presentarse problemas como inflamación, acumulación de líquidos, fatiga muscular y dolor en diferentes partes del cuerpo. Estas alteraciones son comunes en enfermedades como el linfedema, la esclerosis múltiple o la fibromialgia, aunque también pueden aparecer en personas con problemas de circulación o retención de líquidos.
+Una de las técnicas más utilizadas para aliviar estos síntomas es el drenaje linfático manual, un tipo de masaje terapéutico que estimula el flujo de la linfa y ayuda a reducir la inflamación. Esta técnica también ha ganado popularidad dentro de la macro-tendencia del wellness, debido a sus beneficios asociados con la reducción de la retención de líquidos, el manejo del estrés y la mejora del bienestar general, además de contribuir a una piel más saludable y a la relajación muscular.
+Este proyecto propone el desarrollo de un masajeador de drenaje linfático basado en sistemas embebidos, que permita estimular la circulación linfática de forma accesible y guiada. El objetivo es diseñar un dispositivo capaz de asistir al usuario durante la aplicación del masaje, promoviendo una estimulación adecuada del flujo linfático para ayudar a reducir la inflamación, aliviar la fatiga muscular y contribuir tanto al tratamiento terapéutico como al cuidado preventivo y al bienestar general.
+
 ## Descripción del Problema
 
 ## Alcance del Proyecto
@@ -19,9 +23,3 @@ Se propone un índice IP50 por lo que el dispositivo no podrá ser sumergible ni
 **Firmware Engineer** Laura Gutiérrez Arias 
 **Hardware Integration Engineer** Felipe Vásquez
 **Verification & Testing Engineer** Manuela Arboleda Sánchez 
-
-
-### Introducción
-El sistema linfático cumple un papel fundamental en el organismo, ya que participa en la eliminación de toxinas, la regulación de los líquidos corporales y el funcionamiento del sistema inmunológico. Cuando este sistema se ve afectado, pueden presentarse problemas como inflamación, acumulación de líquidos, fatiga muscular y dolor en diferentes partes del cuerpo. Estas alteraciones son comunes en enfermedades como el linfedema, la esclerosis múltiple o la fibromialgia, aunque también pueden aparecer en personas con problemas de circulación o retención de líquidos.
-Una de las técnicas más utilizadas para aliviar estos síntomas es el drenaje linfático manual, un tipo de masaje terapéutico que estimula el flujo de la linfa y ayuda a reducir la inflamación. Esta técnica también ha ganado popularidad dentro de la macro-tendencia del wellness, debido a sus beneficios asociados con la reducción de la retención de líquidos, el manejo del estrés y la mejora del bienestar general, además de contribuir a una piel más saludable y a la relajación muscular.
-Este proyecto propone el desarrollo de un masajeador de drenaje linfático basado en sistemas embebidos, que permita estimular la circulación linfática de forma accesible y guiada. El objetivo es diseñar un dispositivo capaz de asistir al usuario durante la aplicación del masaje, promoviendo una estimulación adecuada del flujo linfático para ayudar a reducir la inflamación, aliviar la fatiga muscular y contribuir tanto al tratamiento terapéutico como al cuidado preventivo y al bienestar general.
