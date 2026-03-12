@@ -28,6 +28,10 @@ Desarrollar un dispositivo electronico portatil para hacer masajes de drenaje li
 * Desarrollar el dispositivo con materiales y funciones que sean seguras para la persona que esta recibiendo los masajes, para no afectar la piel o el sistema linfatico
 ## Repartición de Roles
 **Technical Lead:** Sebastián Escobar Restrepo
+
 **Firmware Engineer** Laura Gutiérrez Arias 
-**Hardware Integration Engineer** Felipe Vásquez
+
+**Hardware Integration Engineer** Felipe Vásquez Martinez
+
 **Verification & Testing Engineer** Manuela Arboleda Sánchez 
+
