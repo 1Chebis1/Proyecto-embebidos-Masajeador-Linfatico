@@ -14,7 +14,8 @@ private:
     adc_oneshot_unit_handle_t _adc_handle;
     adc_cali_handle_t _cali_handle;
     bool _cali_enabled;
-    float _lastPressure; 
+    bool _channelValid;
+    float _lastPressure;
 public:
     Fsr(uint8_t gpio, adc_oneshot_unit_handle_t shared_handle);
     ~Fsr();

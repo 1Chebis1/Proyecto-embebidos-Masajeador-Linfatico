@@ -6,10 +6,10 @@
 #define PIN_FSR_IZQ 32
 #define PIN_FSR_DER 33
 #define PIN_MOTOR 25
-#define PIN_LED_VERDE 21
-#define PIN_LED_AMARILLO 13
-#define PIN_LED_ROJO 15
-#define PIN_BUZZER 18
+#define PIN_LED_VERDE 17
+#define PIN_LED_AMARILLO 5
+#define PIN_LED_ROJO 2
+#define PIN_BUZZER 15
 
 extern "C" void app_main(){
     adc_oneshot_unit_handle_t adc1_handle = NULL; 

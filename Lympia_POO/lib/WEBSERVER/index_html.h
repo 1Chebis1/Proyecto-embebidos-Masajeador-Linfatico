@@ -31,12 +31,17 @@ hr{border:none;border-top:1px solid #c4bdb4;margin:1.25rem 0 2rem}
 .zone-bar{position:relative;height:8px;border-radius:4px;background:linear-gradient(to right,#f59e0b 0%,#f59e0b 30%,#22c55e 30%,#22c55e 80%,#fb7185 80%,#fb7185 100%)}
 .zone-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;background:#2d2a26;border:2.5px solid #EDE9E2;border-radius:50%;transition:left .18s ease}
 .zone-labels{display:flex;justify-content:space-between;margin-top:.35rem;font-size:.68rem;color:#9a9288;font-weight:300}
+.logs-btn{font-family:'Cormorant Garamond',Georgia,serif;font-size:.8rem;font-weight:300;color:#9a9288;border:1px solid #c4bdb4;border-radius:6px;padding:.3rem .7rem;text-decoration:none;letter-spacing:.04em;display:inline-block;margin-top:.2rem}
+.logs-btn:hover{color:#3a3530;border-color:#9a9288}
 </style>
 </head>
 <body>
-<header>
-  <h1>Lymphia</h1>
-  <p class="subtitle">Conexi&oacute;n ESP confirmada &middot; actualizando cada 200ms</p>
+<header style="display:flex;justify-content:space-between;align-items:flex-start">
+  <div>
+    <h1>Lymphia</h1>
+    <p class="subtitle">Conexi&oacute;n ESP confirmada &middot; actualizando cada 200ms</p>
+  </div>
+  <a href="/logs" class="logs-btn">Logs</a>
 </header>
 <hr>
 <div class="main">
@@ -54,12 +59,12 @@ hr{border:none;border-top:1px solid #c4bdb4;margin:1.25rem 0 2rem}
   </div>
   <div class="cards">
     <div class="card">
-      <div class="card-title">Lectura cruda de presi&oacute;n</div>
-      <div class="card-value"><span id="vPromVal">--</span> <span class="card-unit">mV</span></div>
+      <div class="card-title">Tiempo en zona &oacute;ptima</div>
+      <div class="card-value" id="tiempoVal">--:--</div>
     </div>
     <div class="card">
-      <div class="card-title">Presi&oacute;n</div>
-      <div class="card-value"><span id="pctCard">--</span><span class="card-unit">%</span></div>
+      <div class="card-title">Estabilidad</div>
+      <div class="card-value" id="estabilidadVal">--</div>
     </div>
   </div>
   <div class="zone-wrap">
@@ -75,7 +80,7 @@ hr{border:none;border-top:1px solid #c4bdb4;margin:1.25rem 0 2rem}
 <script>
 var r1=document.getElementById('r1'),r2=document.getElementById('r2'),r3=document.getElementById('r3'),r4=document.getElementById('r4');
 var pctVal=document.getElementById('pctVal'),estadoVal=document.getElementById('estadoVal');
-var vPromVal=document.getElementById('vPromVal'),pctCard=document.getElementById('pctCard'),zoneDot=document.getElementById('zoneDot');
+var tiempoVal=document.getElementById('tiempoVal'),estabilidadVal=document.getElementById('estabilidadVal'),zoneDot=document.getElementById('zoneDot');
 function applyRings(e){
   var ins=(e==='insuficiente'),opt=(e==='óptimo'),exc=(e==='excesivo');
   r1.setAttribute('opacity',(ins||opt||exc)?'1':'0');
@@ -86,9 +91,9 @@ function applyRings(e){
 function update(d){
   var p=parseFloat(d.pct);
   pctVal.textContent=p.toFixed(1)+'%';
-  pctCard.textContent=p.toFixed(1);
   estadoVal.textContent=d.estado;
-  vPromVal.textContent=d.vProm;
+  tiempoVal.textContent=String(d.minutos).padStart(2,'0')+':'+String(d.segundos).padStart(2,'0');
+  estabilidadVal.textContent=d.estabilidad;
   zoneDot.style.left=Math.min(100,Math.max(0,p))+'%';
   applyRings(d.estado);
 }

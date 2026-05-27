@@ -19,6 +19,12 @@ class Manager {
         int _vMin;
         int _vMax; 
         uint8_t _motorIntensidad;
+        uint32_t    _ticksEnZonaOptima;
+        float       _historial[10];
+        uint8_t     _histIdx;
+        const char* _zonaAnterior;
+        const char* _estabilidadAnterior;
+
         
     public: 
         Manager(
@@ -29,6 +35,8 @@ class Manager {
             ledc_channel_t motorChannel, 
             uint8_t ledV, uint8_t ledA, uint8_t ledR,
             uint8_t buzzer
+
+            
         );
         ~Manager();
 
