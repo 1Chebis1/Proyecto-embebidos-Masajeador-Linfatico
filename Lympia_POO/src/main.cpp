@@ -3,13 +3,13 @@
 #include "esp_adc/adc_oneshot.h"
 #include "MANAGER.h"
 
-#define PIN_FSR_IZQ 32
-#define PIN_FSR_DER 33
-#define PIN_MOTOR 25
-#define PIN_LED_VERDE 17
-#define PIN_LED_AMARILLO 5
-#define PIN_LED_ROJO 2
-#define PIN_BUZZER 15
+#define PIN_FSR_IZQ 1
+#define PIN_FSR_DER 2
+#define PIN_MOTOR 39
+#define PIN_LED_VERDE 42
+#define PIN_LED_AMARILLO 38
+#define PIN_LED_ROJO 40
+#define PIN_BUZZER 33
 
 extern "C" void app_main(){
     adc_oneshot_unit_handle_t adc1_handle = NULL; 
@@ -25,14 +25,13 @@ extern "C" void app_main(){
     }
 
     Manager device(
-        adc1_handle, 
-        PIN_FSR_IZQ, PIN_FSR_DER, 
+        adc1_handle, PIN_FSR_DER, 
         PIN_MOTOR, LEDC_CHANNEL_0, 
         PIN_LED_VERDE, PIN_LED_AMARILLO, PIN_LED_ROJO, 
         PIN_BUZZER
     );
 
-    device.setConfig(400, 2800, 0); 
+    device.setConfig(400, 3100, 0); 
     device.init(); 
 
     while(1){
