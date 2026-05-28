@@ -1,6 +1,7 @@
 #include "WEBSERVER.h"
 #include "LOGBUFFER.h"
 #include "index_html.h"
+#include "landing_html.h"
 #include "logs_html.h"
 #include "nvs_flash.h"
 #include "esp_netif.h"
@@ -18,6 +19,14 @@ int      WebServer::_vProm          = 0;
 uint32_t WebServer::_minutos        = 0;
 uint32_t WebServer::_segundos       = 0;
 char     WebServer::_estabilidad[8] = "baja";
+bool WebServer::_stopActualizado   = false;
+bool WebServer::_resumeActualizado  = false;
+bool WebServer::_rutinaLowerActaulizada = false;
+bool WebServer::_rutinaMiddleActaulizada = false;
+bool WebServer::_rutinaUpperActaulizada = false;
+
+
+
 
 WebServer::WebServer() : _server(nullptr) {}
 WebServer::~WebServer() {}
@@ -125,10 +134,17 @@ esp_err_t WebServer::_handleData(httpd_req_t* req) {
 }
 
 esp_err_t WebServer::_handleIndex(httpd_req_t* req) {
+    httpd_resp_set_status(req, "302 Found");
+    httpd_resp_set_hdr(req, "Location", "/landing");
+    httpd_resp_send(req, NULL, 0);
+    return ESP_OK;
+}
+
+esp_err_t WebServer::_handleDashboard(httpd_req_t* req) {
     httpd_resp_set_type(req, "text/html; charset=utf-8");
     esp_err_t err = httpd_resp_send(req, INDEX_HTML, HTTPD_RESP_USE_STRLEN);
     if (err != ESP_OK) {
-        LogBuffer::log("WARN", "/ envio fallo: %d", (int)err);
+        LogBuffer::log("WARN", "/dashboard envio fallo: %d", (int)err);
     }
     return err;
 }
@@ -160,10 +176,44 @@ esp_err_t WebServer::_handleLogsData(httpd_req_t* req) {
     return err;
 }
 
-/* ── _startServer ── */
+esp_err_t WebServer::_handleLanding(httpd_req_t* req) {
+    httpd_resp_set_type(req, "text/html; charset=utf-8");
+    esp_err_t err = httpd_resp_send(req, LANDING_HTML, HTTPD_RESP_USE_STRLEN);
+    if (err != ESP_OK) {
+        LogBuffer::log("WARN", "/landing envio fallo: %d", (int)err);
+    }
+    return err;
+}
+
+esp_err_t WebServer::_handleControl(httpd_req_t* req) {
+    char buf[32];
+    if (httpd_req_get_url_query_str(req, buf, sizeof(buf)) == ESP_OK) {
+        char val[8];
+        if (httpd_query_key_value(buf, "stop", val, sizeof(val)) == ESP_OK) {
+            _stopActualizado = true;
+        }
+        else if (httpd_query_key_value(buf, "resume", val, sizeof(val)) == ESP_OK) {
+            _resumeActualizado = true;
+        }
+        else if (httpd_query_key_value(buf, "Lower", val, sizeof(val)) == ESP_OK) {
+            _rutinaLowerActaulizada = true;
+        }
+        else if (httpd_query_key_value(buf, "Middle", val, sizeof(val)) == ESP_OK) {
+            _rutinaMiddleActaulizada = true;
+        }
+        else if (httpd_query_key_value(buf, "Upper", val, sizeof(val)) == ESP_OK) {
+            _rutinaUpperActaulizada = true;
+        }
+    }
+    httpd_resp_send(req, "ok", 2);
+    return ESP_OK;
+}
+
+//Inicio del Servidor
 void WebServer::_startServer() {
     httpd_config_t config   = HTTPD_DEFAULT_CONFIG();
     config.lru_purge_enable = true;
+    config.max_uri_handlers = 10;
 
     esp_err_t err = httpd_start(&_server, &config);
     if (err != ESP_OK) {
@@ -203,9 +253,33 @@ void WebServer::_startServer() {
     u_ldat.handler = _handleLogsData;
     if (httpd_register_uri_handler(_server, &u_ldat) != ESP_OK)
         LogBuffer::log("ERROR", "Registro /logs-data fallo");
+
+    httpd_uri_t u_ctrl;
+    memset(&u_ctrl, 0, sizeof(u_ctrl));
+    u_ctrl.uri     = "/control";
+    u_ctrl.method  = HTTP_GET;
+    u_ctrl.handler = _handleControl;
+    if (httpd_register_uri_handler(_server, &u_ctrl) != ESP_OK)
+        LogBuffer::log("ERROR", "Registro /control fallo");
+
+    httpd_uri_t u_land;
+    memset(&u_land, 0, sizeof(u_land));
+    u_land.uri     = "/landing";
+    u_land.method  = HTTP_GET;
+    u_land.handler = _handleLanding;
+    if (httpd_register_uri_handler(_server, &u_land) != ESP_OK)
+        LogBuffer::log("ERROR", "Registro /landing fallo");
+
+    httpd_uri_t u_dash;
+    memset(&u_dash, 0, sizeof(u_dash));
+    u_dash.uri     = "/dashboard";
+    u_dash.method  = HTTP_GET;
+    u_dash.handler = _handleDashboard;
+    if (httpd_register_uri_handler(_server, &u_dash) != ESP_OK)
+        LogBuffer::log("ERROR", "Registro /dashboard fallo");
 }
 
-/* ── public ── */
+// Funciones Públicas
 void WebServer::init() {
     _initWifi();
     _startServer();
@@ -220,3 +294,35 @@ void WebServer::setData(float pct, int vProm, uint32_t minutos, uint32_t segundo
     strncpy(_estabilidad, estabilidad, sizeof(_estabilidad) - 1);
     _estabilidad[sizeof(_estabilidad) - 1] = '\0';
 }
+
+bool WebServer::getStop() {
+    if (!_stopActualizado) return false;
+    _stopActualizado = false;
+    return true;
+}
+
+bool WebServer::getResume() {
+    if (!_resumeActualizado) return false;
+    _resumeActualizado = false;
+    return true;
+}
+
+bool WebServer::getLower() {
+    if (!_rutinaLowerActaulizada) return false;
+    _rutinaLowerActaulizada = false;  
+    return true;
+}
+
+bool WebServer::getMiddle() {
+    if (!_rutinaMiddleActaulizada) return false;
+    _rutinaMiddleActaulizada = false;  
+    return true;
+}
+
+bool WebServer::getUpper() {
+    if (!_rutinaUpperActaulizada) return false;
+    _rutinaUpperActaulizada = false;  
+    return true;
+}
+
+

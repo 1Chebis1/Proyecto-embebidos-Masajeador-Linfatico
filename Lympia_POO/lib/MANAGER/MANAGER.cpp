@@ -20,7 +20,7 @@ Manager::Manager(
 {
     _vMin                = 200;
     _vMax                = 3000;
-    _motorIntensidad     = 50;
+    _motorIntensidad     = 0;
     _ticksEnZonaOptima   = 0;
     _histIdx             = 0;
     _zonaAnterior        = nullptr;
@@ -50,6 +50,28 @@ void Manager::setConfig(int vMinMv, int vMaxMv, uint8_t intensidadFija) {
 }
 
 void Manager::update() {
+    
+    if (_webserver.getLower()){
+        _motorIntensidad = 100;
+        _motor.setIntensity(_motorIntensidad);
+    }
+    else if (_webserver.getMiddle()){
+        _motorIntensidad = 30;
+        _motor.setIntensity(_motorIntensidad);
+    }
+    else if (_webserver.getUpper()){
+        _motorIntensidad = 5;
+        _motor.setIntensity(_motorIntensidad);
+    }
+
+    if (_webserver.getStop()){
+        _motor.setIntensity(0);
+    }
+    if (_webserver.getResume()){
+        _motor.setIntensity(_motorIntensidad);
+    }
+
+
     int vIzq = _fsrIzq.read();
     if (vIzq == -1) {
         LogBuffer::log("WARN", "FSR izq fallo en lectura ADC, omitiendo ciclo");

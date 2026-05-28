@@ -32,7 +32,7 @@ extern "C" void app_main(){
         PIN_BUZZER
     );
 
-    device.setConfig(400, 2800, 60); 
+    device.setConfig(400, 2800, 0); 
     device.init(); 
 
     while(1){
