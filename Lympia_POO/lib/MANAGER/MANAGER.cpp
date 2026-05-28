@@ -1,4 +1,4 @@
-#include "MANAGER.h"
+    #include "MANAGER.h"
 #include "LOGBUFFER.h"
 #include <stdio.h>
 #include <math.h>
@@ -6,20 +6,18 @@
 
 Manager::Manager(
     adc_oneshot_unit_handle_t adc_handle,
-    uint8_t pinFsr1,
-    uint8_t pinFsr2,
+    uint8_t pinFsrDer, // Only the right FSR remains
     uint8_t pinMotor,
     ledc_channel_t motorChannel,
     uint8_t ledV, uint8_t ledA, uint8_t ledR,
     uint8_t buzzer
-): _fsrIzq(pinFsr1, adc_handle),
-   _fsrDer(pinFsr2, adc_handle),
+): _fsrDer(pinFsrDer, adc_handle),
    _motor(pinMotor, motorChannel),
    _ui(ledV, ledA, ledR, buzzer),
    _uart(UART_NUM_0, 1, 3)
 {
-    _vMin                = 200;
-    _vMax                = 3000;
+    _vMin                = 0;
+    _vMax                = 3300; // Updated to 3.3V (3300mV) as our 100% baseline
     _motorIntensidad     = 0;
     _ticksEnZonaOptima   = 0;
     _histIdx             = 0;
@@ -31,7 +29,6 @@ Manager::Manager(
 }
 
 void Manager::init() {
-    _fsrIzq.init();
     _fsrDer.init();
     _motor.init();
     _ui.init();
@@ -71,30 +68,24 @@ void Manager::update() {
         _motor.setIntensity(_motorIntensidad);
     }
 
-
-    int vIzq = _fsrIzq.read();
-    if (vIzq == -1) {
-        LogBuffer::log("WARN", "FSR izq fallo en lectura ADC, omitiendo ciclo");
-        return;
-    }
+    // Read only the right FSR
     int vDer = _fsrDer.read();
     if (vDer == -1) {
         LogBuffer::log("WARN", "FSR der fallo en lectura ADC, omitiendo ciclo");
         return;
     }
 
-    int   vPromedio  = (vIzq + vDer) / 2;
     float porcentaje = 0.0f;
 
-    if (vPromedio > _vMin) {
-        float valorMedido = (float)(vPromedio - _vMin);
+    if (vDer > _vMin) {
+        float valorMedido = (float)(vDer - _vMin);
         float rangoTotal  = (float)(_vMax - _vMin);
         porcentaje = (valorMedido / rangoTotal) * 100.0f;
     }
 
     if (porcentaje < 0.0f) porcentaje = 0.0f;
     if (porcentaje > 100.0f) {
-        LogBuffer::log("WARN", "Presion saturada: vPromedio=%d vMax=%d", vPromedio, _vMax);
+        LogBuffer::log("WARN", "Presion saturada: vMedido=%d vMax=%d", vDer, _vMax);
         porcentaje = 100.0f;
     }
 
@@ -102,8 +93,8 @@ void Manager::update() {
     _historial[_histIdx] = porcentaje;
     _histIdx = (_histIdx + 1) % 10;
 
-    /* zona óptima timer */
-    if (porcentaje >= 30.0f && porcentaje < 80.0f) {
+    /* zona óptima timer: 3.0V (90.9%) to 3.25V (98.5%) */
+    if (porcentaje >= 90.9f && porcentaje <= 98.5f) {
         _ticksEnZonaOptima++;
     }
     uint32_t totalSegundos = _ticksEnZonaOptima / 10;
@@ -112,9 +103,9 @@ void Manager::update() {
 
     /* determine zone and log transitions */
     const char* zona;
-    if (porcentaje < 30.0f)      zona = "insuficiente";
-    else if (porcentaje < 80.0f) zona = "optimo";
-    else                         zona = "excesivo";
+    if (porcentaje < 90.9f)       zona = "insuficiente";
+    else if (porcentaje <= 98.5f) zona = "optimo";
+    else                          zona = "excesivo";
 
     if (_zonaAnterior == nullptr) {
         LogBuffer::log("INFO", "Zona inicial: %s (%.1f%%)", zona, porcentaje);
@@ -125,12 +116,12 @@ void Manager::update() {
 
     char mensaje_uart[100];
     sprintf(mensaje_uart,
-            "FSR Izq: %d mV | FSR Der: %d mV | Promedio: %d mV | Presion: %.1f%%\r\n",
-            vIzq, vDer, vPromedio, porcentaje);
+            "FSR Der: %d mV | Presion: %.1f%%\r\n",
+            vDer, porcentaje);
     _uart.sendUart(mensaje_uart);
 
-    if (porcentaje < 30.0f)       _ui.alertasLow();
-    else if (porcentaje < 80.0f)  _ui.alertasOk();
+    if (porcentaje < 22.0f)       _ui.alertasLow();
+    else if (porcentaje <= 99.9f) _ui.alertasOk();
     else                          _ui.alertasHigh();
 
     /* varianza sobre las últimas 10 muestras */
@@ -159,5 +150,7 @@ void Manager::update() {
     }
     _estabilidadAnterior = estabilidad;
 
+    _webserver.setData(porcentaje, vDer, minutos, segundos, estabilidad);
+}
     _webserver.setData(porcentaje, vPromedio, minutos, segundos, estabilidad);
 }
