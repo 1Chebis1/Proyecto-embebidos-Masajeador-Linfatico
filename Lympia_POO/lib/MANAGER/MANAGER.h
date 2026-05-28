@@ -9,8 +9,7 @@
 
 class Manager {
     private:
-        Fsr _fsrIzq;
-        Fsr _fsrDer;
+        Fsr _fsrDer; // Retained only the right FSR
         Motor _motor;
         FeedbackSystem _ui;
         Uart _uart;
@@ -29,14 +28,11 @@ class Manager {
     public: 
         Manager(
             adc_oneshot_unit_handle_t adc_handle, 
-            uint8_t pinFsr1,
-            uint8_t pinFsr2, 
+            uint8_t pinFsrDer, // Removed the first FSR pin 
             uint8_t pinMotor, 
             ledc_channel_t motorChannel, 
             uint8_t ledV, uint8_t ledA, uint8_t ledR,
             uint8_t buzzer
-
-            
         );
         ~Manager();
 
@@ -44,6 +40,5 @@ class Manager {
         void init();
         void update();
 };
-
 
 #endif
