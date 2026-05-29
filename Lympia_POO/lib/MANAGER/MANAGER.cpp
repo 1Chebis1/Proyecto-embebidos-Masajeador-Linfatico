@@ -94,7 +94,7 @@ void Manager::update() {
     _histIdx = (_histIdx + 1) % 10;
 
     /* zona óptima timer: 3.0V (90.9%) to 3.25V (98.5%) */
-    if (porcentaje >= 90.9f && porcentaje <= 98.5f) {
+    if (porcentaje >= 22.0f && porcentaje <= 99.9f) {
         _ticksEnZonaOptima++;
     }
     uint32_t totalSegundos = _ticksEnZonaOptima / 10;
@@ -103,8 +103,8 @@ void Manager::update() {
 
     /* determine zone and log transitions */
     const char* zona;
-    if (porcentaje < 90.9f)       zona = "insuficiente";
-    else if (porcentaje <= 98.5f) zona = "optimo";
+    if (porcentaje < 22.0f)       zona = "insuficiente";
+    else if (porcentaje <= 99.9f) zona = "optimo";
     else                          zona = "excesivo";
 
     if (_zonaAnterior == nullptr) {
